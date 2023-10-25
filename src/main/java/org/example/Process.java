@@ -5,12 +5,17 @@ public class Process extends Element {
     private double meanQueue;
     public Process(double delay) {
         super(delay);
+
+        //so it won't be triggered at 1 iteration when tcurr = 0.0
+        setTnext(Double.MAX_VALUE);
         queue = 0;
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
     }
     public Process(String nameOfElement, double delay) {
         super(nameOfElement, delay);
+
+        //so it won't be triggered at 1 iteration when tcurr = 0.0
         setTnext(Double.MAX_VALUE);
         queue = 0;
         maxqueue = Integer.MAX_VALUE;
