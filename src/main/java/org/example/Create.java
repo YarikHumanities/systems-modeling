@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Random;
+
 public class Create extends Element {
     public Create(double delay) {
         super(delay);
@@ -16,7 +18,12 @@ public class Create extends Element {
         var delay = super.getTcurr() + superDelay;
         super.setTnext(delay);
         totalWorkTime += superDelay;
-        super.getNextElement().inAct();
+
+        var nextElementsQuant = super.getNextElementsList().size();
+        Random random = new Random();
+        var randomElementFromList = random.nextInt(nextElementsQuant);
+        super.getNextElementsList().get(randomElementFromList).inAct();
+        //super.getNextElement().inAct();
     }
 
 }

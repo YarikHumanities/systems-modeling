@@ -31,18 +31,6 @@ public class Process extends Element {
     }
     @Override
     public void inAct() {
-//        if (super.getState() == 0) {
-//            super.setState(1);
-//            var delay = super.getTcurr() + super.getDelay();
-//            super.setTnext(delay);
-//            totalWorkTime += delay;
-//        } else {
-//            if (getQueue() < getMaxqueue()) {
-//                setQueue(getQueue() + 1);
-//            } else {
-//                failure++;
-//            }
-//        }
         var freeChannel = this.getFreeWorker();
 
         if(freeChannel!=null){
@@ -66,22 +54,6 @@ public class Process extends Element {
     }
     @Override
     public void outAct() throws Exception {
-//        super.outAct();
-//        super.setTnext(Double.MAX_VALUE);
-//        super.setState(0);
-//        if (getQueue() > 0) {
-//            setQueue(getQueue() - 1);
-//            super.setState(1);
-//            var delay = super.getTcurr() + super.getDelay();
-//            super.setTnext(delay);
-//            totalWorkTime += delay;
-//        }
-//        if(super.getNextElement() != null) {
-//            super.getNextElement().inAct();
-//        }
-//
-//        super.outAct();
-
         super.outAct();
         super.setTnext(Double.MAX_VALUE);
 
@@ -128,8 +100,15 @@ public class Process extends Element {
             super.setTnext(channels.get(0).tnext);
         }
 
-        if(super.getNextElement() != null) {
-            super.getNextElement().inAct();
+//        if(super.getNextElement() != null) {
+//            super.getNextElement().inAct();
+//        }
+
+        if (!super.getNextElementsList().isEmpty()) {
+            var nextElementsQuant = super.getNextElementsList().size();
+            Random random = new Random();
+            var randomElementFromList = random.nextInt(nextElementsQuant);
+            super.getNextElementsList().get(randomElementFromList).inAct();
         }
 
     }

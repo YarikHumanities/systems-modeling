@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+
 public class Element {
     private String name;
     private double tnext;
@@ -8,7 +10,8 @@ public class Element {
     private int quantity;
     private double tcurr;
     private int state;
-    private Element nextElement;
+    //private Element nextElement;
+    private ArrayList<Element> nextElementsList = new ArrayList<>();
     private static int nextId=0;
     private int id;
 
@@ -22,7 +25,7 @@ public class Element {
         distribution = "exp";
         tcurr = tnext;
         state=0;
-        nextElement=null;
+        //nextElement=null;
         id = nextId;
         nextId++;
         name = "element"+id;
@@ -34,7 +37,7 @@ public class Element {
         distribution = "";
         tcurr = tnext;
         state=0;
-        nextElement=null;
+        //nextElement=null;
         id = nextId;
         nextId++;
         name = "element"+id;
@@ -46,12 +49,17 @@ public class Element {
         distribution = "";
         tcurr = tnext;
         state=0;
-        nextElement=null;
+        //nextElement=null;
         id = nextId;
         nextId++;
 //        name = "element"+id;
     }
-
+    public void setNextElementsList(ArrayList<Element> nextElementsList) {
+        this.nextElementsList = nextElementsList;
+    }
+    public ArrayList<Element> getNextElementsList() {
+        return nextElementsList;
+    }
     public double getDelay() {
         double delay = getDelayMean();
         if ("exp".equalsIgnoreCase(getDistribution())) {
@@ -101,12 +109,12 @@ public class Element {
     public void setState(int state) {
         this.state = state;
     }
-    public Element getNextElement() {
-        return nextElement;
-    }
-    public void setNextElement(Element nextElement) {
-        this.nextElement = nextElement;
-    }
+//    public Element getNextElement() {
+//        return nextElement;
+//    }
+//    public void setNextElement(Element nextElement) {
+//        this.nextElement = nextElement;
+//    }
     public void inAct() {
 
     }
