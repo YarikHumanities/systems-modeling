@@ -13,7 +13,7 @@ public class Model {
         tcurr = tnext;
     }
 
-    public void simulate(double time) {
+    public void simulate(double time) throws Exception {
         while (tcurr < time) {
 
             tnext = Double.MAX_VALUE;

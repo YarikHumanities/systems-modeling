@@ -10,11 +10,12 @@ public class Create extends Element {
         super.setTnext(0.0); // імітація розпочнеться з події Create
     }
     @Override
-    public void outAct() {
+    public void outAct() throws Exception {
         super.outAct();
-        var delay = super.getTcurr() + super.getDelay();
+        var superDelay = super.getDelay();
+        var delay = super.getTcurr() + superDelay;
         super.setTnext(delay);
-        totalWorkTime += delay;
+        totalWorkTime += superDelay;
         super.getNextElement().inAct();
     }
 

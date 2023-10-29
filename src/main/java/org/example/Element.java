@@ -43,7 +43,7 @@ public class Element {
         name = nameOfElement;
         tnext = 0.0;
         delayMean = delay;
-        distribution = "exp";
+        distribution = "";
         tcurr = tnext;
         state=0;
         nextElement=null;
@@ -110,7 +110,7 @@ public class Element {
     public void inAct() {
 
     }
-    public void outAct(){
+    public void outAct() throws Exception {
         quantity++;
     }
 

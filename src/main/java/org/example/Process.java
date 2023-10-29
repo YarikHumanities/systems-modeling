@@ -1,8 +1,11 @@
 package org.example;
 
+import java.util.*;
+
 public class Process extends Element {
     private int queue, maxqueue, failure;
     private double meanQueue;
+    private List<Channel> channels = new ArrayList<>();
     public Process(double delay) {
         super(delay);
 
@@ -20,15 +23,40 @@ public class Process extends Element {
         queue = 0;
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
+
+        for(int i=0; i<3; i++){
+            Channel channel = new Channel(Double.MAX_VALUE, 0, i);
+            channels.add(channel);
+        }
     }
     @Override
     public void inAct() {
-        if (super.getState() == 0) {
-            super.setState(1);
-            var delay = super.getTcurr() + super.getDelay();
-            super.setTnext(delay);
-            totalWorkTime += delay;
-        } else {
+//        if (super.getState() == 0) {
+//            super.setState(1);
+//            var delay = super.getTcurr() + super.getDelay();
+//            super.setTnext(delay);
+//            totalWorkTime += delay;
+//        } else {
+//            if (getQueue() < getMaxqueue()) {
+//                setQueue(getQueue() + 1);
+//            } else {
+//                failure++;
+//            }
+//        }
+        var freeChannel = this.getFreeWorker();
+
+        if(freeChannel!=null){
+            System.out.println(this.getName() + " and its worker " + freeChannel.id + " inActed");
+            freeChannel.state = 1;
+            var superDelay = super.getDelay();
+            var delay = super.getTcurr() + superDelay;
+            freeChannel.tnext = delay;
+            totalWorkTime += superDelay;
+            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
+            super.setTnext(channels.get(0).tnext);
+        }
+        else{
             if (getQueue() < getMaxqueue()) {
                 setQueue(getQueue() + 1);
             } else {
@@ -37,22 +65,93 @@ public class Process extends Element {
         }
     }
     @Override
-    public void outAct() {
+    public void outAct() throws Exception {
+//        super.outAct();
+//        super.setTnext(Double.MAX_VALUE);
+//        super.setState(0);
+//        if (getQueue() > 0) {
+//            setQueue(getQueue() - 1);
+//            super.setState(1);
+//            var delay = super.getTcurr() + super.getDelay();
+//            super.setTnext(delay);
+//            totalWorkTime += delay;
+//        }
+//        if(super.getNextElement() != null) {
+//            super.getNextElement().inAct();
+//        }
+//
+//        super.outAct();
 
         super.outAct();
         super.setTnext(Double.MAX_VALUE);
-        super.setState(0);
+
+        if(this.getBusyWorker()==null ){
+            throw new Exception("outAct cannot be called when there is no busy workers");
+        }
+
+        if(this.getTcurr()!=channels.get(0).tnext){
+            throw new Exception("tcurr of process cannot be different from tnext of youngest channel");
+        }
+
+        var earliestChannel = getEarliestChannel();
+
+        if(earliestChannel.state!=1){
+            throw new Exception("Earliest Channel is Free in outAct");
+        }
+
+        earliestChannel.state = 0;
+        earliestChannel.tnext = Double.MAX_VALUE;
 
         if (getQueue() > 0) {
             setQueue(getQueue() - 1);
-            super.setState(1);
-            var delay = super.getTcurr() + super.getDelay();
-            super.setTnext(delay);
-            totalWorkTime += delay;
+            var freeChannel = this.getFreeWorker();
+            freeChannel.state = 1;
+            var superDelay = super.getDelay();
+            var delay = super.getTcurr() + superDelay;
+            freeChannel.tnext = delay;
+            totalWorkTime += superDelay;
+
+            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
+            super.setTnext(channels.get(0).tnext);
+
+            if(this.getBusyWorker()!=null){
+                Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+                System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
+                super.setTnext(channels.get(0).tnext);
+            }
         }
+
+        if(this.getBusyWorker()!=null){
+            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
+            super.setTnext(channels.get(0).tnext);
+        }
+
         if(super.getNextElement() != null) {
             super.getNextElement().inAct();
         }
+
+    }
+
+    public Channel getEarliestChannel(){
+        return this.channels.get(0);
+    }
+    public Channel getBusyWorker(){
+        for(int i = 0; i<channels.size(); i++){
+            if(channels.get(i).state==1){
+                return channels.get(i);
+            }
+        }
+        return null;
+    }
+    public Channel getFreeWorker(){
+        for(int i = 0; i<channels.size(); i++){
+            if(channels.get(i).state==0){
+                return channels.get(i);
+            }
+        }
+        return null;
     }
 
     public int getFailure() {
