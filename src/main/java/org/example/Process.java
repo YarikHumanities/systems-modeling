@@ -24,7 +24,7 @@ public class Process extends Element {
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
 
-        for(int i=0; i<3; i++){
+        for(int i=0; i<1; i++){
             Channel channel = new Channel(Double.MAX_VALUE, 0, i);
             channels.add(channel);
         }
@@ -32,7 +32,7 @@ public class Process extends Element {
     @Override
     public void inAct() {
         var freeChannel = this.getFreeWorker();
-
+        super.incrementQuantity();
         if(freeChannel!=null){
             System.out.println(this.getName() + " and its worker " + freeChannel.id + " inActed");
             freeChannel.state = 1;
@@ -99,10 +99,6 @@ public class Process extends Element {
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
             super.setTnext(channels.get(0).tnext);
         }
-
-//        if(super.getNextElement() != null) {
-//            super.getNextElement().inAct();
-//        }
 
         if (!super.getNextElementsList().isEmpty()) {
             var nextElementsQuant = super.getNextElementsList().size();

@@ -7,6 +7,11 @@ public class Element {
     private double tnext;
     private double delayMean, delayDev;
     private String distribution;
+
+    public void incrementQuantity() {
+        this.quantity++;
+    }
+
     private int quantity;
     private double tcurr;
     private int state;
@@ -109,17 +114,11 @@ public class Element {
     public void setState(int state) {
         this.state = state;
     }
-//    public Element getNextElement() {
-//        return nextElement;
-//    }
-//    public void setNextElement(Element nextElement) {
-//        this.nextElement = nextElement;
-//    }
     public void inAct() {
-
+        quantity++;
     }
     public void outAct() throws Exception {
-        quantity++;
+        //quantity++;
     }
 
     public double getTnext() {

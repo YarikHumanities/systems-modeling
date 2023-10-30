@@ -13,7 +13,8 @@ public class Create extends Element {
     }
     @Override
     public void outAct() throws Exception {
-        super.outAct();
+        //super.outAct();
+        super.incrementQuantity();
         var superDelay = super.getDelay();
         var delay = super.getTcurr() + superDelay;
         super.setTnext(delay);
