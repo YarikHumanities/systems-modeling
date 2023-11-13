@@ -13,7 +13,6 @@ public class Create extends Element {
     }
     @Override
     public void outAct() throws Exception {
-        //super.outAct();
         super.incrementQuantity();
         var superDelay = super.getDelay();
         var delay = super.getTcurr() + superDelay;
@@ -24,7 +23,6 @@ public class Create extends Element {
         Random random = new Random();
         var randomElementFromList = random.nextInt(nextElementsQuant);
         super.getNextElementsList().get(randomElementFromList).inAct();
-        //super.getNextElement().inAct();
     }
 
 }

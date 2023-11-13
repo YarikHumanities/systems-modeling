@@ -6,6 +6,7 @@ public class Process extends Element {
     private int queue, maxqueue, failure;
     private double meanQueue;
     private List<Channel> channels = new ArrayList<>();
+    private int workerQuant = 3;
     public Process(double delay) {
         super(delay);
 
@@ -24,10 +25,14 @@ public class Process extends Element {
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
 
-        for(int i=0; i<1; i++){
+        for(int i=0; i<workerQuant; i++){
             Channel channel = new Channel(Double.MAX_VALUE, 0, i);
             channels.add(channel);
         }
+    }
+
+    private void sortWorkersToSetTnext(){
+        Collections.sort(channels, Comparator.comparing(Channel::getTnext));
     }
     @Override
     public void inAct() {
@@ -40,9 +45,9 @@ public class Process extends Element {
             var delay = super.getTcurr() + superDelay;
             freeChannel.tnext = delay;
             totalWorkTime += superDelay;
-            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            this.sortWorkersToSetTnext();
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
-            super.setTnext(channels.get(0).tnext);
+            super.setTnext(getEarliestChannel().tnext);
         }
         else{
             if (getQueue() < getMaxqueue()) {
@@ -83,21 +88,15 @@ public class Process extends Element {
             freeChannel.tnext = delay;
             totalWorkTime += superDelay;
 
-            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            this.sortWorkersToSetTnext();
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
-            super.setTnext(channels.get(0).tnext);
-
-            if(this.getBusyWorker()!=null){
-                Collections.sort(channels, Comparator.comparing(Channel::getTnext));
-                System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
-                super.setTnext(channels.get(0).tnext);
-            }
+            super.setTnext(getEarliestChannel().tnext);
         }
 
         if(this.getBusyWorker()!=null){
-            Collections.sort(channels, Comparator.comparing(Channel::getTnext));
+            this.sortWorkersToSetTnext();
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
-            super.setTnext(channels.get(0).tnext);
+            super.setTnext(getEarliestChannel().tnext);
         }
 
         if (!super.getNextElementsList().isEmpty()) {

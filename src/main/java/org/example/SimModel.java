@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class SimModel {
     public static void main(String[] args) throws Exception {
 
-        Create c = new Create("Create-1", 1.0);
+        Create c = new Create("Create-1", 2.0);
         Process p1 = new Process("Process-1", 1.0);
         Process p2 = new Process("Process-2", 1.0);
         Process p3 = new Process("Process-3", 1.0);
@@ -16,8 +16,8 @@ public class SimModel {
         //p1.setNextElement(p2);
         //p2.setNextElement(p3);
        c.setNextElementsList(new ArrayList<>(){{add(p1);}});
-       p1.setNextElementsList(new ArrayList<>(){{add(p2);}});
-       p2.setNextElementsList(new ArrayList<>(){{add(p3);}});
+       p1.setNextElementsList(new ArrayList<>(){{add(p2); add(p3);}});
+       //p2.setNextElementsList(new ArrayList<>(){{add(p3);}});
 
         p1.setMaxqueue(5);
         p2.setMaxqueue(5);

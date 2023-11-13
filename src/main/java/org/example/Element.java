@@ -15,13 +15,17 @@ public class Element {
     private int quantity;
     private double tcurr;
     private int state;
-    //private Element nextElement;
     private ArrayList<Element> nextElementsList = new ArrayList<>();
     private static int nextId=0;
     private int id;
-
     public double totalWorkTime;
-
+    private int priority;
+    public int getPriority() {
+        return priority;
+    }
+    private boolean checkNextElementsPriorityCorrectness(){
+        return false;
+    }
 
     public Element(){
 
@@ -30,7 +34,6 @@ public class Element {
         distribution = "exp";
         tcurr = tnext;
         state=0;
-        //nextElement=null;
         id = nextId;
         nextId++;
         name = "element"+id;
@@ -42,7 +45,6 @@ public class Element {
         distribution = "";
         tcurr = tnext;
         state=0;
-        //nextElement=null;
         id = nextId;
         nextId++;
         name = "element"+id;
@@ -54,10 +56,8 @@ public class Element {
         distribution = "";
         tcurr = tnext;
         state=0;
-        //nextElement=null;
         id = nextId;
         nextId++;
-//        name = "element"+id;
     }
     public void setNextElementsList(ArrayList<Element> nextElementsList) {
         this.nextElementsList = nextElementsList;
