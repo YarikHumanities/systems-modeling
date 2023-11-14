@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class SimModel {
     public static void main(String[] args) throws Exception {
 
-        Create c = new Create("Create-1", 2.0);
-        Process p1 = new Process("Process-1", 1.0, 90);
-        Process p2 = new Process("Process-2", 1.0, 10);
+        Create c = new Create("Create-1", 2.0, false);
+        Process p1 = new Process("Process-1", 1.0, 10, 3, true);
+        Process p2 = new Process("Process-2", 1.0, 90, 2, true);
         //Process p3 = new Process("Process-3", 1.0, 80);
 
        c.setNextElementsList(new ArrayList<>(){{

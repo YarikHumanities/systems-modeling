@@ -7,8 +7,8 @@ public class Create extends Element {
         super(delay);
         super.setTnext(0.0); // імітація розпочнеться з події Create
     }
-    public Create(String nameOfElement, double delay) {
-        super(nameOfElement, delay);
+    public Create(String nameOfElement, double delay, boolean chooseByProbability) {
+        super(nameOfElement, delay, chooseByProbability);
         super.setTnext(0.0); // імітація розпочнеться з події Create
     }
     @Override
@@ -19,13 +19,14 @@ public class Create extends Element {
         super.setTnext(delay);
         totalWorkTime += superDelay;
 
-//        var nextElementsQuant = super.getNextElementsList().size();
-//        Random random = new Random();
-//        var randomElementFromList = random.nextInt(nextElementsQuant);
-//
-//        super.getNextElementsList().get(randomElementFromList).inAct();
-        var nextElement = super.chooseNextElement();
-        super.getNextElementsList().get(nextElement).inAct();
+        if(super.isChooseByProbability()) {
+            var nextElement = super.chooseNextElement();
+            super.getNextElementsList().get(nextElement).inAct();
+        }
+        else{
+            var maxPriorElement = super.findIndexOfMaxPriorityElement();
+            super.getNextElementsList().get(maxPriorElement).inAct();
+        }
     }
 
 }

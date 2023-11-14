@@ -8,11 +8,9 @@ public class Element {
     private double tnext;
     private double delayMean, delayDev;
     private String distribution;
-
     public void incrementQuantity() {
         this.quantity++;
     }
-
     private int quantity;
     private double tcurr;
     private int state;
@@ -21,6 +19,21 @@ public class Element {
     private int id;
     public double totalWorkTime;
     protected int probability;
+    protected boolean isAvailable;
+    protected int priority;
+    protected boolean chooseByProbability;
+    public boolean isChooseByProbability() {
+        return chooseByProbability;
+    }
+    public int getPriority() {
+        return priority;
+    }
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
     public int getprobability() {
         return probability;
     }
@@ -48,6 +61,21 @@ public class Element {
             }
         }
         return 0;
+    }
+    protected int findIndexOfMaxPriorityElement() {
+        if (nextElementsList == null || nextElementsList.size() == 0) {
+            throw new IllegalArgumentException("Array is empty or null");
+        }
+
+        int maxPriorityIndex = 0;
+
+        for (int i = 1; i < nextElementsList.size(); i++) {
+            if (nextElementsList.get(i).getPriority() > nextElementsList.get(maxPriorityIndex).getPriority()) {
+                maxPriorityIndex = i;
+            }
+        }
+
+        return maxPriorityIndex;
     }
     public boolean nextElementsExists(){
         return !this.nextElementsList.isEmpty();
@@ -78,7 +106,8 @@ public class Element {
         nextId++;
         name = "element"+id;
     }
-    public Element(String nameOfElement, double delay){
+    public Element(String nameOfElement, double delay, boolean chooseByProbability){
+        this.chooseByProbability = chooseByProbability;
         name = nameOfElement;
         tnext = 0.0;
         delayMean = delay;
