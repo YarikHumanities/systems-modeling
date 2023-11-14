@@ -6,17 +6,9 @@ public class Process extends Element {
     private int queue, maxqueue, failure;
     private double meanQueue;
     private List<Channel> channels = new ArrayList<>();
-    private int workerQuant = 3;
-    public Process(double delay) {
-        super(delay);
+    private int workerQuant = 1;
+    public Process(String nameOfElement, double delay, int probability) {
 
-        //so it won't be triggered at 1 iteration when tcurr = 0.0
-        setTnext(Double.MAX_VALUE);
-        queue = 0;
-        maxqueue = Integer.MAX_VALUE;
-        meanQueue = 0.0;
-    }
-    public Process(String nameOfElement, double delay) {
         super(nameOfElement, delay);
 
         //so it won't be triggered at 1 iteration when tcurr = 0.0
@@ -24,6 +16,8 @@ public class Process extends Element {
         queue = 0;
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
+
+        super.probability = probability;
 
         for(int i=0; i<workerQuant; i++){
             Channel channel = new Channel(Double.MAX_VALUE, 0, i);
@@ -100,10 +94,12 @@ public class Process extends Element {
         }
 
         if (!super.getNextElementsList().isEmpty()) {
-            var nextElementsQuant = super.getNextElementsList().size();
-            Random random = new Random();
-            var randomElementFromList = random.nextInt(nextElementsQuant);
-            super.getNextElementsList().get(randomElementFromList).inAct();
+//            var nextElementsQuant = super.getNextElementsList().size();
+//            Random random = new Random();
+//            var randomElementFromList = random.nextInt(nextElementsQuant);
+//            super.getNextElementsList().get(randomElementFromList).inAct();
+            var nextElement = super.chooseNextElement();
+            super.getNextElementsList().get(nextElement).inAct();
         }
 
     }

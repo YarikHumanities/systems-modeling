@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Element {
     private String name;
@@ -19,14 +20,42 @@ public class Element {
     private static int nextId=0;
     private int id;
     public double totalWorkTime;
-    private int priority;
-    public int getPriority() {
-        return priority;
+    protected int probability;
+    public int getprobability() {
+        return probability;
     }
-    private boolean checkNextElementsPriorityCorrectness(){
-        return false;
+    public boolean checkNextElementsprobabilityCorrectness(){
+        int sum = 0;
+        for (Element element : nextElementsList) {
+            if(element instanceof Process) {
+                sum += element.getprobability();
+            }
+        }
+        return sum == 100;
     }
 
+    protected int chooseNextElement(){
+        var random = new Random();
+        int randomNumber = random.nextInt(100);
+
+        int currentProbabilitySum = 0;
+        for (int index = 0; index < nextElementsList.size(); index++) {
+            Element element = nextElementsList.get(index);
+            currentProbabilitySum += element.getprobability();
+
+            if (randomNumber < currentProbabilitySum) {
+                return index;
+            }
+        }
+        return 0;
+    }
+    public boolean nextElementsExists(){
+        return !this.nextElementsList.isEmpty();
+    }
+
+    public boolean singleNextElement(){
+       return this.nextElementsList.size() == 1;
+    }
     public Element(){
 
         tnext = Double.MAX_VALUE;

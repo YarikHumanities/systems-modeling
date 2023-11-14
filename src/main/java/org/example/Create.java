@@ -19,10 +19,13 @@ public class Create extends Element {
         super.setTnext(delay);
         totalWorkTime += superDelay;
 
-        var nextElementsQuant = super.getNextElementsList().size();
-        Random random = new Random();
-        var randomElementFromList = random.nextInt(nextElementsQuant);
-        super.getNextElementsList().get(randomElementFromList).inAct();
+//        var nextElementsQuant = super.getNextElementsList().size();
+//        Random random = new Random();
+//        var randomElementFromList = random.nextInt(nextElementsQuant);
+//
+//        super.getNextElementsList().get(randomElementFromList).inAct();
+        var nextElement = super.chooseNextElement();
+        super.getNextElementsList().get(nextElement).inAct();
     }
 
 }

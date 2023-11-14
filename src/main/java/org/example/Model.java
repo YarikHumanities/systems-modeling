@@ -6,11 +6,20 @@ public class Model {
     private ArrayList<Element> list = new ArrayList<>();
     double tnext, tcurr;
     int event;
-    public Model(ArrayList<Element> elements) {
+    public Model(ArrayList<Element> elements) throws Exception {
         list = elements;
         tnext = 0.0;
         event = 0;
         tcurr = tnext;
+
+        for (Element e : list) {
+            if(e.nextElementsExists() && !e.singleNextElement()) {
+                boolean checkprobability = e.checkNextElementsprobabilityCorrectness();
+                if (!checkprobability) {
+                    throw new Exception("probability of " + e.getName() + " next elements is incorrect");
+                }
+            }
+        }
     }
 
     public void simulate(double time) throws Exception {
