@@ -62,6 +62,9 @@ public class Model {
         }
         printResult(time);
     }
+    private void blockElement(Element element){
+        element.setAvailable(false);
+    }
     public void printInfo() {
         for (Element e : list) {
             e.printInfo();
