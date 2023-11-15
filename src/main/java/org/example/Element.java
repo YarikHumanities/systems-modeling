@@ -106,7 +106,7 @@ public class Element {
     }
     public Element(double delay){
         name = "anonymus";
-        tnext = 0.0;
+        tnext = 0.1;
         delayMean = delay;
         distribution = "";
         tcurr = tnext;
@@ -119,7 +119,7 @@ public class Element {
         this.available = true;
         this.chooseByProbability = chooseByProbability;
         name = nameOfElement;
-        tnext = 0.0;
+        tnext = 0.1;
         delayMean = delay;
         distribution = "";
         tcurr = tnext;
@@ -139,12 +139,10 @@ public class Element {
             delay = FunRand.Exp(getDelayMean());
         } else {
             if ("norm".equalsIgnoreCase(getDistribution())) {
-                delay = FunRand.Norm(getDelayMean(),
-                        getDelayDev());
+                delay = FunRand.Norm(getDelayMean(), getDelayDev());
             } else {
                 if ("unif".equalsIgnoreCase(getDistribution())) {
-                    delay = FunRand.Unif(getDelayMean(),
-                            getDelayDev());
+                    delay = FunRand.Unif(getDelayMean(), getDelayDev());
                 } else {
                     if("".equalsIgnoreCase(getDistribution()))
                         delay = getDelayMean();

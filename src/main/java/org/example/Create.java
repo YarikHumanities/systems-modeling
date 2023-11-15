@@ -5,11 +5,11 @@ import java.util.Random;
 public class Create extends Element {
     public Create(double delay) {
         super(delay);
-        super.setTnext(0.0); // імітація розпочнеться з події Create
+        super.setTnext(1.0); // імітація розпочнеться з події Create - в завданні про банк з 1.0
     }
     public Create(String nameOfElement, double delay, boolean chooseByProbability) {
         super(nameOfElement, delay, chooseByProbability);
-        super.setTnext(0.0); // імітація розпочнеться з події Create
+        super.setTnext(0.1); // імітація розпочнеться з події Create
     }
     @Override
     public void outAct() throws Exception {

@@ -10,7 +10,7 @@ public class Model {
     int swaps;
     public Model(ArrayList<Element> elements) throws Exception {
         list = elements;
-        tnext = 0.0;
+        tnext = 0.1;
         event = 0;
         tcurr = tnext;
 
@@ -103,7 +103,7 @@ public class Model {
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
                 System.out.printf("Average Load of Device: %.3f%n", p.totalWorkTime / timeOfModeling);
-                System.out.print("Swaps: " + this.swaps);
+                System.out.println("Swaps: " + this.swaps);
 
             }
         }

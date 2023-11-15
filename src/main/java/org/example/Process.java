@@ -7,6 +7,22 @@ public class Process extends Element {
     private double meanQueue;
     private final List<Channel> channels = new ArrayList<>();
     private final int workerQuant = 1;
+    public void setBusyInStart() throws Exception {
+        //TODO: set tnext for primary busy worker so it can reach outAct
+        if(this.channels.size()==1) {
+
+            this.channels.get(0).state = 1;
+
+            //var superDelay = super.getDelay();
+            var delay = super.getTcurr() + 1.5;
+
+            this.channels.get(0).tnext = delay;
+            super.setTnext(getEarliestChannel().tnext);
+        }
+        else{
+            throw new Exception("Can't set BUSY state for Process if it has more than 1 Worker");
+        }
+    }
     public Process(String nameOfElement, double delay, int probability, int priority, boolean chooseByProbability) {
 
         super(nameOfElement, delay, chooseByProbability);
@@ -48,6 +64,7 @@ public class Process extends Element {
         else{
             if (getQueue() < getMaxqueue()) {
                 setQueue(getQueue() + 1);
+                System.out.println(this.getName() + " inActed and will get +1 to queue");
             } else {
                 failure++;
             }

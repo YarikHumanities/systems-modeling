@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class SimModel {
     public static void main(String[] args) throws Exception {
 
-        Create c = new Create("Create-1", 1.0, false);
-        Process p1 = new Process("Process-1", 2.0, 10, 10, false);
-        Process p2 = new Process("Process-2", 2.0, 90, 1, false);
+        Create c = new Create("Create-1", 0.5, false);
+        Process p1 = new Process("Process-1", 0.3, 10, 10, false);
+        Process p2 = new Process("Process-2", 0.3, 90, 1, false);
 
        c.setNextElementsList(new ArrayList<>(){{
            add(p1);
@@ -17,6 +17,16 @@ public class SimModel {
 
         p1.setMaxqueue(3);
         p2.setMaxqueue(3);
+
+        //В КОЖНІЙ ЧЕРЗІ ВЖЕ ПО 2 КЛІЄНТА
+        p1.incrementQueue();
+        p1.incrementQueue();
+        p2.incrementQueue();
+        p2.incrementQueue();
+
+        //ОБИДВА ЗАЙНЯТІ С ЗАМОГО ПОЧАТКУ НА ЯКИЙСЬ ЧАС
+        p1.setBusyInStart();
+        p2.setBusyInStart();
 
         c.setDistribution("exp");
         p1.setDistribution("exp");
@@ -28,7 +38,7 @@ public class SimModel {
         list.add(p2);
 
         Model model = new Model(list);
-        model.simulate(1000.0);
+        model.simulate(100.0);
     }
 
 }
