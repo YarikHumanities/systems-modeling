@@ -6,6 +6,8 @@ public class Model {
     private ArrayList<Element> list = new ArrayList<>();
     double tnext, tcurr;
     int event;
+
+    int swaps;
     public Model(ArrayList<Element> elements) throws Exception {
         list = elements;
         tnext = 0.0;
@@ -22,12 +24,33 @@ public class Model {
         }
     }
 
+    private void swapQueues(Create createElement){
+        Process process1 = (Process) createElement.getNextElementsList().get(0);
+        Process process2 = (Process) createElement.getNextElementsList().get(1);
+        if(process1.getQueue()==process1.getMaxqueue() || process2.getQueue()==process2.getMaxqueue()){
+            if((process1.getQueue()-process2.getQueue())>=2){
+                process1.decrementQueue();
+                process2.incrementQueue();
+                System.out.println("SWAP");
+                swaps++;
+            } else if ((process2.getQueue()-process1.getQueue())>=2) {
+                process2.decrementQueue();
+                process1.incrementQueue();
+                System.out.println("SWAP");
+                swaps++;
+            }
+        }
+    }
     public void simulate(double time) throws Exception {
         while (tcurr < time) {
+
+            //Swap queues if one is 2 longer that another
+            this.swapQueues((Create) list.get(0));
 
             tnext = Double.MAX_VALUE;
 
             for (Element e : list) {
+
                 if (e.getTnext() < tnext) {
                     tnext = e.getTnext();
                     event = e.getId();
@@ -80,6 +103,7 @@ public class Model {
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
                 System.out.printf("Average Load of Device: %.3f%n", p.totalWorkTime / timeOfModeling);
+                System.out.print("Swaps: " + this.swaps);
 
             }
         }

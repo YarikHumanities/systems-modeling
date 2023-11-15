@@ -136,6 +136,14 @@ public class Process extends Element {
         return queue;
     }
 
+    public void decrementQueue(){
+        --this.queue;
+    }
+
+    public void incrementQueue(){
+        ++this.queue;
+    }
+
     public void setQueue(int queue) {
         this.queue = queue;
     }

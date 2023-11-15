@@ -29,6 +29,7 @@ public class Create extends Element {
                 super.getNextElementsList().get(maxPriorElement).inAct();
             }
             else{
+                //Вибір шляху за довжиною черги (блокування шляху)
                 Process process1 = (Process) super.getNextElementsList().get(0);
                 Process process2 = (Process) super.getNextElementsList().get(1);
                 if(process1.getQueue() < process2.getQueue()){
