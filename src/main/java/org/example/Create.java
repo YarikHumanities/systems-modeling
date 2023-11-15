@@ -24,9 +24,28 @@ public class Create extends Element {
             super.getNextElementsList().get(nextElement).inAct();
         }
         else{
-            var maxPriorElement = super.findIndexOfMaxPriorityElement();
-            super.getNextElementsList().get(maxPriorElement).inAct();
+            if(checkQueues()) {
+                var maxPriorElement = super.findIndexOfMaxPriorityElement();
+                super.getNextElementsList().get(maxPriorElement).inAct();
+            }
+            else{
+                Process process1 = (Process) super.getNextElementsList().get(0);
+                Process process2 = (Process) super.getNextElementsList().get(1);
+                if(process1.getQueue() < process2.getQueue()){
+                    super.getNextElementsList().get(0).inAct();
+                }
+                else{
+                    super.getNextElementsList().get(1).inAct();
+                }
+            }
         }
+
+    }
+
+    private boolean checkQueues(){
+       Process process1 = (Process) super.getNextElementsList().get(0);
+       Process process2 = (Process) super.getNextElementsList().get(1);
+       return (process1.getQueue() == process2.getQueue()) || (process1.getQueue() == 0 && process2.getQueue() == 0);
     }
 
 }
