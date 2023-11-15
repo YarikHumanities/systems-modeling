@@ -7,17 +7,27 @@ public class Process extends Element {
     private double meanQueue;
     private final List<Channel> channels = new ArrayList<>();
     private final int workerQuant = 1;
+
+    private boolean firstIteration = true;
     public void setBusyInStart() throws Exception {
         //TODO: set tnext for primary busy worker so it can reach outAct
         if(this.channels.size()==1) {
 
             this.channels.get(0).state = 1;
 
-            //var superDelay = super.getDelay();
-            var delay = super.getTcurr() + 1.5;
+            var superDelay = super.getDelay();
+            var delay = super.getTcurr() + superDelay;
 
             this.channels.get(0).tnext = delay;
             super.setTnext(getEarliestChannel().tnext);
+
+            System.out.println(this.getName() + " will be set to busy at start and its tnext = " + super.getTnext());
+
+            super.setDelayMean(0.3);
+            super.setDistribution("exp");
+
+            System.out.println("And now it has exp. distribution with mean = " + super.getDelayMean());
+
         }
         else{
             throw new Exception("Can't set BUSY state for Process if it has more than 1 Worker");
@@ -69,6 +79,7 @@ public class Process extends Element {
                 failure++;
             }
         }
+
     }
     @Override
     public void outAct() throws Exception {
@@ -105,8 +116,7 @@ public class Process extends Element {
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
             super.setTnext(getEarliestChannel().tnext);
         }
-
-        if(this.getBusyWorker()!=null){
+        else if (this.getBusyWorker()!=null){
             this.sortWorkersToSetTnext();
             System.out.println("Tnext of " + this.getName() + " will be set to tnext of worker " + channels.get(0).id + " and it's " + channels.get(0).tnext);
             super.setTnext(getEarliestChannel().tnext);

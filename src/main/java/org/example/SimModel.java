@@ -29,8 +29,15 @@ public class SimModel {
         p2.setBusyInStart();
 
         c.setDistribution("exp");
-        p1.setDistribution("exp");
-        p2.setDistribution("exp");
+
+        p1.setDelayMean(1.0);
+        p1.setDelayDev(0.3);
+
+        p2.setDelayMean(1.0);
+        p2.setDelayDev(0.3);
+
+        p1.setDistribution("norm");
+        p2.setDistribution("norm");
 
         ArrayList<Element> list = new ArrayList<>();
         list.add(c);
