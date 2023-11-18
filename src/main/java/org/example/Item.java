@@ -37,4 +37,8 @@ public class Item {
         id=nextId;
         nextId++;
     }
+
+    public double calcTimeInBank(){
+        return (double) this.timeOut - this.timeIn;
+    }
 }

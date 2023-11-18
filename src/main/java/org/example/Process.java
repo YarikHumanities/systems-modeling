@@ -9,7 +9,12 @@ public class Process extends Element {
     private final List<Channel> channels = new ArrayList<>();
     private final int workerQuant = 1;
 
-    //TODO: remade to Item functionality
+    public double averageClientTimeInBank = 0;
+
+    public double averageTimeBetweenLeave = 0;
+
+    public double prevLeaveTime = 0;
+
     public void setBusyInStart() throws Exception {
         if(this.channels.size()==1) {
             Item item = new Item();
@@ -107,6 +112,11 @@ public class Process extends Element {
 
         var itemOfEarliestChannel = earliestChannel.getCurrentItem();
         System.out.println(this.getName() + " finished its work with Item<" + itemOfEarliestChannel.getId() + ">");
+        itemOfEarliestChannel.setTimeOut(this.getTcurr());
+
+        this.averageClientTimeInBank += itemOfEarliestChannel.calcTimeInBank();
+        this.averageTimeBetweenLeave += (this.getTcurr() - this.prevLeaveTime);
+        this.prevLeaveTime = this.getTcurr();
 
         earliestChannel.setCurrentItem(null);
         earliestChannel.state = 0;
