@@ -9,9 +9,16 @@ public class Process extends Element {
     protected final List<Channel> channels = new ArrayList<>();
     protected int workerQuant = 1;
 
-    public Process(String nameOfElement, double delay, int quantOfWorkers) {
+    public ProcessTypes getProcessType() {
+        return processType;
+    }
+
+    protected ProcessTypes processType;
+
+    public Process(String nameOfElement, double delay, int quantOfWorkers, ProcessTypes processType) {
 
         super(nameOfElement, delay);
+        this.processType = processType;
         this.workerQuant = quantOfWorkers;
         this.queue = new ArrayDeque<>();
         //so it won't be triggered at 1 iteration when tcurr = 0.0
@@ -102,9 +109,31 @@ public class Process extends Element {
         }
 
         if (!super.getNextElementsList().isEmpty()) {
-            super.getNextElementsList().get(0).inAct(itemOfEarliestChannel);
+
+            //ЯКЩО ПАЦІЄТ МАЄ ТИП 1, ТО ЙДЕ ДО СУПРОВОДЖУЮЧИХ
+            var accompanyingIndex = findNextProcessByType(ProcessTypes.ACCOMPANYING);
+            if(itemOfEarliestChannel.getType() == 1){
+                super.getNextElementsList().get(accompanyingIndex).inAct(itemOfEarliestChannel);
+            }
+            else{
+                System.out.println("Item type is not 1 and if finished for now");
+            }
+
         }
 
+    }
+    protected int findNextProcessByType(ProcessTypes processType){
+        //МАЄТЬСЯ НА УВАЗІ ЩО ПРОЦЕСІВ З 2 ОДНАКОВИМИ ТИПАМИ НЕ МОЖЕ ІСНУВАТИ
+        int searchedIndex = 0;
+        for (int i = 0; i<super.getNextElementsList().size(); i++){
+            if (super.getNextElementsList().get(i) instanceof Process) {
+                Process p = (Process) super.getNextElementsList().get(i);
+                if(p.getProcessType()==ProcessTypes.ACCOMPANYING){
+                    searchedIndex = i;
+                }
+            }
+        }
+        return searchedIndex;
     }
     public Channel getEarliestChannel(){
         return this.channels.get(0);
