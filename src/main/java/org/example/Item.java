@@ -34,8 +34,8 @@ public class Item {
         nextId++;
     }
 
-    public Item(double timeIt){
-        this.timeIn = timeIt;
+    public Item(int type){
+        this.type = type;
         id=nextId;
         nextId++;
     }

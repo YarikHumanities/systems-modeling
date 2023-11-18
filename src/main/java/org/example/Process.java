@@ -3,16 +3,17 @@ package org.example;
 import java.util.*;
 
 public class Process extends Element {
-    private int maxqueue, failure;
-    private Deque<Item> queue = new ArrayDeque<>();
-    private double meanQueue;
-    private final List<Channel> channels = new ArrayList<>();
-    private int workerQuant = 1;
+    protected int maxqueue, failure;
+    protected Queue <Item> queue;
+    protected double meanQueue;
+    protected final List<Channel> channels = new ArrayList<>();
+    protected int workerQuant = 1;
 
     public Process(String nameOfElement, double delay, int quantOfWorkers) {
 
         super(nameOfElement, delay);
         this.workerQuant = quantOfWorkers;
+        this.queue = new ArrayDeque<>();
         //so it won't be triggered at 1 iteration when tcurr = 0.0
         setTnext(Double.MAX_VALUE);
         maxqueue = Integer.MAX_VALUE;
@@ -23,8 +24,7 @@ public class Process extends Element {
             channels.add(channel);
         }
     }
-
-    private void sortWorkersToSetTnext(){
+    protected void sortWorkersToSetTnext(){
         Collections.sort(channels, Comparator.comparing(Channel::getTnext));
     }
     @Override
@@ -46,6 +46,7 @@ public class Process extends Element {
         else{
             if (getQueue() < getMaxqueue()) {
                 setQueue(item);
+                printQueue();
                 System.out.println(this.getName() + " was not free and will get +1 to queue with item <" + item.getId() + ">");
             } else {
                 failure++;
@@ -102,18 +103,9 @@ public class Process extends Element {
 
         if (!super.getNextElementsList().isEmpty()) {
             super.getNextElementsList().get(0).inAct(itemOfEarliestChannel);
-//            if(super.isChooseByProbability()) {
-//                var nextElement = super.chooseNextElement();
-//                super.getNextElementsList().get(nextElement).inAct(itemOfEarliestChannel);
-//            }
-//            else{
-//                var maxPriorElement = super.findIndexOfMaxPriorityElement();
-//                super.getNextElementsList().get(maxPriorElement).inAct(itemOfEarliestChannel);
-//            }
         }
 
     }
-
     public Channel getEarliestChannel(){
         return this.channels.get(0);
     }
@@ -137,7 +129,6 @@ public class Process extends Element {
     public void printResult(){
         System.out.println(getName()+ " quantity = " + (super.quantity - this.failure));
     }
-
     public int getFailure() {
         return failure;
     }
@@ -147,12 +138,9 @@ public class Process extends Element {
     public void printQueue(){
         System.out.print("<-[");
         for(Item item: this.queue){
-            System.out.print("Item <" + item.getId() + ">, ");
+            System.out.print("Item <" + item.getId() + "> (" + item.getType() + ") |");
         }
         System.out.println("]");
-    }
-    public Item peekLastItem(){
-        return this.queue.pollLast();
     }
     public void setQueue(Item item) {
         this.queue.offer(item);

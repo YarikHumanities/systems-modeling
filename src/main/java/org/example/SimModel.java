@@ -9,11 +9,13 @@ public class SimModel {
     }
 
     public static void setTestCore() throws Exception {
-        Create c = new Create("Create-1", 1.0);
-        Process p1 = new Process("Process-1", 2.0, 2);
+        Create c = new Create("Create-1", 15.0);
+        Process p1 = new PriorityQueueProcess("Чергові-лікарі", 2.0, 2);
+
         c.setNextElementsList(new ArrayList<>(){{
             add(p1);
         }});
+
 
         c.setDistribution("exp");
         p1.setDistribution("exp");
