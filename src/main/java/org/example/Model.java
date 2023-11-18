@@ -24,21 +24,48 @@ public class Model {
         }
     }
 
+    //TODO : remake to new Queue implementation
     private void swapQueues(Create createElement){
         Process process1 = (Process) createElement.getNextElementsList().get(0);
         Process process2 = (Process) createElement.getNextElementsList().get(1);
         if(process1.getQueue()==process1.getMaxqueue() || process2.getQueue()==process2.getMaxqueue()){
+
             if((process1.getQueue()-process2.getQueue())>=2){
-                process1.decrementQueue();
-                process2.incrementQueue();
+                System.out.println("Before:");
+                System.out.print(process1.getName() + " ");
+                process1.printQueue();
+                System.out.print(process2.getName() + " ");
+                process2.printQueue();
+
+                var lastItem = process1.peekLastItem();
+                process2.setQueue(lastItem);
                 System.out.println("SWAP");
                 swaps++;
+
+                System.out.println("After:");
+                System.out.print(process1.getName() + " ");
+                process1.printQueue();
+                System.out.print(process2.getName() + " ");
+                process2.printQueue();
             } else if ((process2.getQueue()-process1.getQueue())>=2) {
-                process2.decrementQueue();
-                process1.incrementQueue();
+                System.out.println("Before:");
+                System.out.print(process1.getName() + " ");
+                process1.printQueue();
+                System.out.print(process2.getName() + " ");
+                process2.printQueue();
+
+                var lastItem = process2.peekLastItem();
+                process1.setQueue(lastItem);
                 System.out.println("SWAP");
                 swaps++;
+
+                System.out.println("After:");
+                System.out.print(process1.getName() + " ");
+                process1.printQueue();
+                System.out.print(process2.getName() + " ");
+                process2.printQueue();
             }
+
         }
     }
     public void simulate(double time) throws Exception {
@@ -95,10 +122,12 @@ public class Model {
     }
     public void printResult(double timeOfModeling) {
         System.out.println("\n-------------RESULTS-------------");
+        var averageQuantity = 0;
         for (Element e : list) {
             e.printResult();
             if (e instanceof Process) {
                 Process p = (Process) e;
+                averageQuantity += ((p.getQuantity() - p.getFailure()) + (p.getMeanQueue() / tcurr));
                 System.out.printf("mean length of queue = %.3f%n", p.getMeanQueue() / tcurr);
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
@@ -107,5 +136,8 @@ public class Model {
 
             }
         }
+        averageQuantity = averageQuantity / 2;
+        System.out.println();
+        System.out.println("Average Quantity: " + averageQuantity);
     }
 }

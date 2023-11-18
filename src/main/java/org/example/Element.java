@@ -11,7 +11,7 @@ public class Element {
     public void incrementQuantity() {
         this.quantity++;
     }
-    private int quantity;
+    protected int quantity;
     private double tcurr;
     private int state;
     private ArrayList<Element> nextElementsList = new ArrayList<>();
@@ -180,7 +180,7 @@ public class Element {
     public void setState(int state) {
         this.state = state;
     }
-    public void inAct() {
+    public void inAct(Item item) {
         quantity++;
     }
     public void outAct() throws Exception {

@@ -3,17 +3,18 @@ package org.example;
 import java.util.*;
 
 public class Process extends Element {
-    private int queue, maxqueue, failure;
+    private int maxqueue, failure;
+    private Deque<Item> queue = new ArrayDeque<>();
     private double meanQueue;
     private final List<Channel> channels = new ArrayList<>();
     private final int workerQuant = 1;
 
-    private boolean firstIteration = true;
+    //TODO: remade to Item functionality
     public void setBusyInStart() throws Exception {
-        //TODO: set tnext for primary busy worker so it can reach outAct
         if(this.channels.size()==1) {
-
+            Item item = new Item();
             this.channels.get(0).state = 1;
+            this.channels.get(0).setCurrentItem(item);
 
             var superDelay = super.getDelay();
             var delay = super.getTcurr() + superDelay;
@@ -25,6 +26,10 @@ public class Process extends Element {
 
             super.setDelayMean(0.3);
             super.setDistribution("exp");
+
+            this.queue.offer(new Item(super.getTcurr()));
+            this.queue.offer(new Item(super.getTcurr()));
+
 
             System.out.println("And now it has exp. distribution with mean = " + super.getDelayMean());
 
@@ -39,7 +44,6 @@ public class Process extends Element {
 
         //so it won't be triggered at 1 iteration when tcurr = 0.0
         setTnext(Double.MAX_VALUE);
-        queue = 0;
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
 
@@ -57,12 +61,13 @@ public class Process extends Element {
         Collections.sort(channels, Comparator.comparing(Channel::getTnext));
     }
     @Override
-    public void inAct() {
+    public void inAct(Item item) {
         var freeChannel = this.getFreeWorker();
         super.incrementQuantity();
         if(freeChannel!=null){
-            System.out.println(this.getName() + " and its worker " + freeChannel.id + " inActed");
+            System.out.println(this.getName() + " and its worker " + freeChannel.id + " inActed and took item <" + item.getId() + ">");
             freeChannel.state = 1;
+            freeChannel.setCurrentItem(item);
             var superDelay = super.getDelay();
             var delay = super.getTcurr() + superDelay;
             freeChannel.tnext = delay;
@@ -73,8 +78,8 @@ public class Process extends Element {
         }
         else{
             if (getQueue() < getMaxqueue()) {
-                setQueue(getQueue() + 1);
-                System.out.println(this.getName() + " inActed and will get +1 to queue");
+                setQueue(item);
+                System.out.println(this.getName() + " was not free and will get +1 to queue with item <" + item.getId() + ">");
             } else {
                 failure++;
             }
@@ -100,13 +105,19 @@ public class Process extends Element {
             throw new Exception("Earliest Channel is Free in outAct");
         }
 
+        var itemOfEarliestChannel = earliestChannel.getCurrentItem();
+        System.out.println(this.getName() + " finished its work with Item<" + itemOfEarliestChannel.getId() + ">");
+
+        earliestChannel.setCurrentItem(null);
         earliestChannel.state = 0;
         earliestChannel.tnext = Double.MAX_VALUE;
 
         if (getQueue() > 0) {
-            setQueue(getQueue() - 1);
+            Item newItemFromQueue = this.queue.poll();
             var freeChannel = this.getFreeWorker();
             freeChannel.state = 1;
+            freeChannel.setCurrentItem(newItemFromQueue);
+            System.out.println("Queue in " + this.getName() + " was " + getQueue() + " so it was polled and item<" + newItemFromQueue.getId() + "> sent to worker " + freeChannel.id);
             var superDelay = super.getDelay();
             var delay = super.getTcurr() + superDelay;
             freeChannel.tnext = delay;
@@ -126,11 +137,11 @@ public class Process extends Element {
 
             if(super.isChooseByProbability()) {
                 var nextElement = super.chooseNextElement();
-                super.getNextElementsList().get(nextElement).inAct();
+                super.getNextElementsList().get(nextElement).inAct(itemOfEarliestChannel);
             }
             else{
                 var maxPriorElement = super.findIndexOfMaxPriorityElement();
-                super.getNextElementsList().get(maxPriorElement).inAct();
+                super.getNextElementsList().get(maxPriorElement).inAct(itemOfEarliestChannel);
             }
         }
 
@@ -155,24 +166,29 @@ public class Process extends Element {
         }
         return null;
     }
+    @Override
+    public void printResult(){
+        System.out.println(getName()+ " quantity = " + (super.quantity - this.failure));
+    }
 
     public int getFailure() {
         return failure;
     }
     public int getQueue() {
-        return queue;
+        return this.queue.size();
     }
-
-    public void decrementQueue(){
-        --this.queue;
+    public void printQueue(){
+        System.out.print("<-[");
+        for(Item item: this.queue){
+            System.out.print("Item <" + item.getId() + ">, ");
+        }
+        System.out.println("]");
     }
-
-    public void incrementQueue(){
-        ++this.queue;
+    public Item peekLastItem(){
+        return this.queue.pollLast();
     }
-
-    public void setQueue(int queue) {
-        this.queue = queue;
+    public void setQueue(Item item) {
+        this.queue.offer(item);
     }
     public int getMaxqueue() {
         return maxqueue;
@@ -188,7 +204,7 @@ public class Process extends Element {
     }
     @Override
     public void doStatistics(double delta) {
-        meanQueue = getMeanQueue() + queue * delta;
+        meanQueue = getMeanQueue() + queue.size() * delta;
     }
     public double getMeanQueue() {
         return meanQueue;
