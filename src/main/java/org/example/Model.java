@@ -13,66 +13,10 @@ public class Model {
         tnext = 0.1;
         event = 0;
         tcurr = tnext;
-
-        for (Element e : list) {
-            if(e.nextElementsExists() && !e.singleNextElement()) {
-                boolean checkprobability = e.checkNextElementsprobabilityCorrectness();
-                if (!checkprobability) {
-                    throw new Exception("probability of " + e.getName() + " next elements is incorrect");
-                }
-            }
-        }
     }
 
-    //TODO : remake to new Queue implementation
-    private void swapQueues(Create createElement){
-        Process process1 = (Process) createElement.getNextElementsList().get(0);
-        Process process2 = (Process) createElement.getNextElementsList().get(1);
-        if(process1.getQueue()==process1.getMaxqueue() || process2.getQueue()==process2.getMaxqueue()){
-
-            if((process1.getQueue()-process2.getQueue())>=2){
-                System.out.println("Before:");
-                System.out.print(process1.getName() + " ");
-                process1.printQueue();
-                System.out.print(process2.getName() + " ");
-                process2.printQueue();
-
-                var lastItem = process1.peekLastItem();
-                process2.setQueue(lastItem);
-                System.out.println("SWAP");
-                swaps++;
-
-                System.out.println("After:");
-                System.out.print(process1.getName() + " ");
-                process1.printQueue();
-                System.out.print(process2.getName() + " ");
-                process2.printQueue();
-            } else if ((process2.getQueue()-process1.getQueue())>=2) {
-                System.out.println("Before:");
-                System.out.print(process1.getName() + " ");
-                process1.printQueue();
-                System.out.print(process2.getName() + " ");
-                process2.printQueue();
-
-                var lastItem = process2.peekLastItem();
-                process1.setQueue(lastItem);
-                System.out.println("SWAP");
-                swaps++;
-
-                System.out.println("After:");
-                System.out.print(process1.getName() + " ");
-                process1.printQueue();
-                System.out.print(process2.getName() + " ");
-                process2.printQueue();
-            }
-
-        }
-    }
     public void simulate(double time) throws Exception {
         while (tcurr < time) {
-
-            //Swap queues if one is 2 longer that another
-            this.swapQueues((Create) list.get(0));
 
             tnext = Double.MAX_VALUE;
 

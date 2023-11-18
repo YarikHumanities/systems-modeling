@@ -7,12 +7,12 @@ public class Process extends Element {
     private Deque<Item> queue = new ArrayDeque<>();
     private double meanQueue;
     private final List<Channel> channels = new ArrayList<>();
-    private final int workerQuant = 1;
+    private int workerQuant = 1;
 
-    public Process(String nameOfElement, double delay) {
+    public Process(String nameOfElement, double delay, int quantOfWorkers) {
 
         super(nameOfElement, delay);
-
+        this.workerQuant = quantOfWorkers;
         //so it won't be triggered at 1 iteration when tcurr = 0.0
         setTnext(Double.MAX_VALUE);
         maxqueue = Integer.MAX_VALUE;
@@ -73,7 +73,7 @@ public class Process extends Element {
         }
 
         var itemOfEarliestChannel = earliestChannel.getCurrentItem();
-        System.out.println(this.getName() + " finished its work with Item<" + itemOfEarliestChannel.getId() + ">");
+        System.out.println(this.getName() + " finished its work with Item<" + itemOfEarliestChannel.getId() + "> (" + itemOfEarliestChannel.getType() + " type)");
 
         earliestChannel.setCurrentItem(null);
         earliestChannel.state = 0;
