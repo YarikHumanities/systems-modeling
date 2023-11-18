@@ -6,6 +6,8 @@ import lombok.Data;
 public class Item {
     private int id;
 
+    private int type;
+
     public double getTimeIn() {
         return timeIn;
     }

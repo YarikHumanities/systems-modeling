@@ -18,74 +18,14 @@ public class Element {
     private static int nextId=0;
     private int id;
     public double totalWorkTime;
-    protected int probability;
+
     protected boolean available;
-    protected int priority;
     protected boolean chooseByProbability;
-    public boolean isChooseByProbability() {
-        return chooseByProbability;
-    }
-    public int getPriority() {
-        return priority;
-    }
     public boolean isAvailable() {
         return available;
     }
     public void setAvailable(boolean available) {
         this.available = available;
-    }
-    public int getprobability() {
-        return probability;
-    }
-    public boolean checkNextElementsprobabilityCorrectness(){
-        int sum = 0;
-        for (Element element : nextElementsList) {
-            if(element instanceof Process) {
-                sum += element.getprobability();
-            }
-        }
-        return sum == 100;
-    }
-
-    protected int chooseNextElement(){
-        var random = new Random();
-        int randomNumber = random.nextInt(100);
-
-        int currentProbabilitySum = 0;
-        for (int index = 0; index < nextElementsList.size(); index++) {
-
-            if(nextElementsList.get(index).isAvailable()) {
-                Element element = nextElementsList.get(index);
-                currentProbabilitySum += element.getprobability();
-
-                if (randomNumber < currentProbabilitySum) {
-                    return index;
-                }
-            }
-
-        }
-
-        //IN CASE IF ALL PROCESSES WILL BE NOT AVAILABLE
-        return Integer.MAX_VALUE;
-    }
-    protected int findIndexOfMaxPriorityElement() {
-        if (nextElementsList == null || nextElementsList.size() == 0) {
-            throw new IllegalArgumentException("Array is empty or null");
-        }
-
-        int maxPriorityIndex = 0;
-
-        for (int i = 1; i < nextElementsList.size(); i++) {
-
-            if(nextElementsList.get(i).isAvailable()) {
-                if (nextElementsList.get(i).getPriority() > nextElementsList.get(maxPriorityIndex).getPriority()) {
-                    maxPriorityIndex = i;
-                }
-            }
-
-        }
-
-        return maxPriorityIndex;
     }
     public boolean nextElementsExists(){
         return !this.nextElementsList.isEmpty();
@@ -115,7 +55,7 @@ public class Element {
         nextId++;
         name = "element"+id;
     }
-    public Element(String nameOfElement, double delay, boolean chooseByProbability){
+    public Element(String nameOfElement, double delay){
         this.available = true;
         this.chooseByProbability = chooseByProbability;
         name = nameOfElement;

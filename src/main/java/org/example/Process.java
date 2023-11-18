@@ -9,47 +9,14 @@ public class Process extends Element {
     private final List<Channel> channels = new ArrayList<>();
     private final int workerQuant = 1;
 
-    //TODO: remade to Item functionality
-    public void setBusyInStart() throws Exception {
-        if(this.channels.size()==1) {
-            Item item = new Item();
-            this.channels.get(0).state = 1;
-            this.channels.get(0).setCurrentItem(item);
+    public Process(String nameOfElement, double delay) {
 
-            var superDelay = super.getDelay();
-            var delay = super.getTcurr() + superDelay;
-
-            this.channels.get(0).tnext = delay;
-            super.setTnext(getEarliestChannel().tnext);
-
-            System.out.println(this.getName() + " will be set to busy at start and its tnext = " + super.getTnext());
-
-            super.setDelayMean(0.3);
-            super.setDistribution("exp");
-
-            this.queue.offer(new Item(super.getTcurr()));
-            this.queue.offer(new Item(super.getTcurr()));
-
-
-            System.out.println("And now it has exp. distribution with mean = " + super.getDelayMean());
-
-        }
-        else{
-            throw new Exception("Can't set BUSY state for Process if it has more than 1 Worker");
-        }
-    }
-    public Process(String nameOfElement, double delay, int probability, int priority, boolean chooseByProbability) {
-
-        super(nameOfElement, delay, chooseByProbability);
+        super(nameOfElement, delay);
 
         //so it won't be triggered at 1 iteration when tcurr = 0.0
         setTnext(Double.MAX_VALUE);
         maxqueue = Integer.MAX_VALUE;
         meanQueue = 0.0;
-
-        super.probability = probability;
-
-        super.priority = priority;
 
         for(int i=0; i<workerQuant; i++){
             Channel channel = new Channel(Double.MAX_VALUE, 0, i);
@@ -134,15 +101,15 @@ public class Process extends Element {
         }
 
         if (!super.getNextElementsList().isEmpty()) {
-
-            if(super.isChooseByProbability()) {
-                var nextElement = super.chooseNextElement();
-                super.getNextElementsList().get(nextElement).inAct(itemOfEarliestChannel);
-            }
-            else{
-                var maxPriorElement = super.findIndexOfMaxPriorityElement();
-                super.getNextElementsList().get(maxPriorElement).inAct(itemOfEarliestChannel);
-            }
+            super.getNextElementsList().get(0).inAct(itemOfEarliestChannel);
+//            if(super.isChooseByProbability()) {
+//                var nextElement = super.chooseNextElement();
+//                super.getNextElementsList().get(nextElement).inAct(itemOfEarliestChannel);
+//            }
+//            else{
+//                var maxPriorElement = super.findIndexOfMaxPriorityElement();
+//                super.getNextElementsList().get(maxPriorElement).inAct(itemOfEarliestChannel);
+//            }
         }
 
     }
