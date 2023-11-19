@@ -6,8 +6,6 @@ public class Model {
     private ArrayList<Element> list = new ArrayList<>();
     double tnext, tcurr;
     int event;
-
-    int swaps;
     public Model(ArrayList<Element> elements) throws Exception {
         list = elements;
         tnext = 0.1;
@@ -76,7 +74,6 @@ public class Model {
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
                 System.out.printf("Average Load of Device: %.3f%n", p.totalWorkTime / timeOfModeling);
-                System.out.println("Swaps: " + this.swaps);
 
             }
         }

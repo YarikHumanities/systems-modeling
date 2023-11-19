@@ -92,7 +92,7 @@ public class Process extends Element {
             var freeChannel = this.getFreeWorker();
             freeChannel.state = 1;
             freeChannel.setCurrentItem(newItemFromQueue);
-            System.out.println("Queue in " + this.getName() + " was " + getQueue() + " so it was polled and item<" + newItemFromQueue.getId() + "> sent to worker " + freeChannel.id);
+            System.out.println("Queue in " + this.getName() + " was " + getQueue()+1 + " so it was polled and item<" + newItemFromQueue.getId() + "> sent to worker " + freeChannel.id);
             var superDelay = super.getDelay();
             var delay = super.getTcurr() + superDelay;
             freeChannel.tnext = delay;
@@ -110,13 +110,23 @@ public class Process extends Element {
 
         if (!super.getNextElementsList().isEmpty()) {
 
-            //ЯКЩО ПАЦІЄТ МАЄ ТИП 1, ТО ЙДЕ ДО СУПРОВОДЖУЮЧИХ
-            var accompanyingIndex = findNextProcessByType(ProcessTypes.ACCOMPANYING);
-            if(itemOfEarliestChannel.getType() == 1){
-                super.getNextElementsList().get(accompanyingIndex).inAct(itemOfEarliestChannel);
-            }
-            else{
-                System.out.println("Item type is not 1 and if finished for now");
+            if(this.getProcessType()==ProcessTypes.DUTY) {
+
+                System.out.print("We are in Duty process ");
+
+                if (itemOfEarliestChannel.getType() == 1) {
+
+                    System.out.println(" - Item has 1 type");
+                    var accompanyingIndex = findNextProcessByType(ProcessTypes.ACCOMPANYING);
+                    super.getNextElementsList().get(accompanyingIndex).inAct(itemOfEarliestChannel);
+
+                } else {
+
+                    System.out.println(" - Item hasn't 1 type");
+                    var labTransferIndex = findNextProcessByType(ProcessTypes.LAB_TRANSFER);
+                    super.getNextElementsList().get(labTransferIndex).inAct(itemOfEarliestChannel);
+
+                }
             }
 
         }
@@ -128,7 +138,7 @@ public class Process extends Element {
         for (int i = 0; i<super.getNextElementsList().size(); i++){
             if (super.getNextElementsList().get(i) instanceof Process) {
                 Process p = (Process) super.getNextElementsList().get(i);
-                if(p.getProcessType()==ProcessTypes.ACCOMPANYING){
+                if(p.getProcessType()==processType){
                     searchedIndex = i;
                 }
             }
