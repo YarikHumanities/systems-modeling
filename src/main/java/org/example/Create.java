@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.Random;
-
 public class Create extends Element {
     public Create(double delay) {
         super(delay);
@@ -11,6 +9,8 @@ public class Create extends Element {
         super(nameOfElement, delay, chooseByProbability);
         super.setTnext(0.0); // імітація розпочнеться з події Create
     }
+
+
     @Override
     public void outAct() throws Exception {
         super.incrementQuantity();
@@ -19,14 +19,7 @@ public class Create extends Element {
         super.setTnext(delay);
         totalWorkTime += superDelay;
 
-        if(super.isChooseByProbability()) {
-            var nextElement = super.chooseNextElement();
-            super.getNextElementsList().get(nextElement).inAct();
-        }
-        else{
-            var maxPriorElement = super.findIndexOfMaxPriorityElement();
-            super.getNextElementsList().get(maxPriorElement).inAct();
-        }
+        this.defaultChoice();
     }
 
 }

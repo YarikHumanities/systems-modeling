@@ -3,39 +3,37 @@ package org.example;
 import java.util.ArrayList;
 
 public class SimModel {
+    public static int N = 2;
     public static void main(String[] args) throws Exception {
-
+        simpleModelSet();
+    }
+    public static void simpleModelSet() throws Exception {
         Create c = new Create("Create-1", 2.0, true);
-        Process p1 = new Process("Process-1", 1.0, 10, 3, true);
-        Process p2 = new Process("Process-2", 1.0, 10, 3, true);
-        Process p3 = new Process("Process-3", 1.0, 90, 2, true);
-
-       c.setNextElementsList(new ArrayList<>(){{
-           add(p1);
-       }});
-       p1.setNextElementsList(new ArrayList<>(){{
-           add(p2);
-           add(p3);
-       }});
-
-
-        p1.setMaxqueue(5);
-        p2.setMaxqueue(5);
-        p3.setMaxqueue(5);
-
         c.setDistribution("exp");
-        p1.setDistribution("exp");
-        p2.setDistribution("exp");
-        p3.setDistribution("exp");
-
         ArrayList<Element> list = new ArrayList<>();
         list.add(c);
-        list.add(p1);
-        list.add(p2);
-        list.add(p3);
+
+        for(int i = 0; i<N; i++){
+            String processName = "Process-" + (i + 1);
+            Process p1 = new Process(processName, 1.0, 10, 3, true);
+            p1.setMaxqueue(5);
+            p1.setDistribution("exp");
+            list.add(p1);
+            if(i==0){
+                c.setNextElementsList(new ArrayList<>(){{
+                    add(p1);
+                }});
+            }
+            else{
+                int lastIndex = list.size() - 2;
+                list.get(lastIndex).setNextElementsList(new ArrayList<>(){{
+                    add(p1);
+                }});
+            }
+        }
+
 
         Model model = new Model(list);
-        model.simulate(1000.0);
+        model.simulate(100.0);
     }
-
 }

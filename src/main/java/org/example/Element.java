@@ -46,6 +46,20 @@ public class Element {
         }
         return sum == 100;
     }
+    public void choiceAlgo(){
+        if(isChooseByProbability()) {
+            var nextElement = chooseNextElement();
+            getNextElementsList().get(nextElement).inAct();
+        }
+        else{
+            var maxPriorElement = findIndexOfMaxPriorityElement();
+            getNextElementsList().get(maxPriorElement).inAct();
+        }
+    }
+
+    public void defaultChoice(){
+        getNextElementsList().get(0).inAct();
+    }
 
     protected int chooseNextElement(){
         var random = new Random();
