@@ -111,24 +111,50 @@ public class Process extends Element {
         if (!super.getNextElementsList().isEmpty()) {
 
             if(this.getProcessType()==ProcessTypes.DUTY) {
-
-                System.out.print("We are in Duty process ");
-
+                System.out.print("We are in DUTY process ");
                 if (itemOfEarliestChannel.getType() == 1) {
-
                     System.out.println(" - Item has 1 type");
                     var accompanyingIndex = findNextProcessByType(ProcessTypes.ACCOMPANYING);
                     super.getNextElementsList().get(accompanyingIndex).inAct(itemOfEarliestChannel);
-
                 } else {
-
                     System.out.println(" - Item hasn't 1 type");
                     var labTransferIndex = findNextProcessByType(ProcessTypes.LAB_TRANSFER);
                     super.getNextElementsList().get(labTransferIndex).inAct(itemOfEarliestChannel);
-
                 }
             }
-
+            if (this.getProcessType() ==ProcessTypes.ACCOMPANYING) {
+                //ЦЬОГО БАЧИТИ НЕ БУДЕМО ПОКИ ЩО БО У СУПРОВІДНИХ НЕМАЄ ДАЛІ ШЛЯХУ
+                System.out.println("Item <" + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") arrived ar the ward");
+            }
+            if(this.getProcessType() ==ProcessTypes.LAB_TRANSFER){
+                System.out.println("We are in LAB_TRANSFER process so Item <" +  + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") will be sent to REGISTRATION");
+                var registrationProcessIndex = findNextProcessByType(ProcessTypes.REGISTRATION);
+                super.getNextElementsList().get(registrationProcessIndex).inAct(itemOfEarliestChannel);
+            }
+            if(this.getProcessType() ==ProcessTypes.REGISTRATION) {
+                System.out.println("We are in REGISTRATION process so Item <" +  + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") will be sent to TESTS");
+                var testsProcessIndex = findNextProcessByType(ProcessTypes.TAKING_TEST);
+                super.getNextElementsList().get(testsProcessIndex).inAct(itemOfEarliestChannel);
+            }
+            if(this.getProcessType() ==ProcessTypes.TAKING_TEST) {
+                if(itemOfEarliestChannel.getType()==3){
+                    System.out.println("We are in TAKING_TEST process so Item <" +  + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") will be sent to EXIT");
+                }
+                else{
+                    System.out.println("We are in TAKING_TEST process so Item <" +  + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") will be sent BACK");
+                    if(itemOfEarliestChannel.getType()!=1){
+                        System.out.println("And it's Type will be changed to (1)");
+                        itemOfEarliestChannel.setType(1);
+                    }
+                    var backTransferProcessIndex = findNextProcessByType(ProcessTypes.BACK_TRANSFER);
+                    super.getNextElementsList().get(backTransferProcessIndex).inAct(itemOfEarliestChannel);
+                }
+            }
+            if (this.getProcessType() == ProcessTypes.BACK_TRANSFER) {
+                System.out.println("We are in BACK_TRANSFER process so Item <" +  + itemOfEarliestChannel.getId() + "> will be sent BACK TO DUTY");
+                var backedToDutyIndex = findNextProcessByType(ProcessTypes.DUTY);
+                super.getNextElementsList().get(backedToDutyIndex).inAct(itemOfEarliestChannel);
+            }
         }
 
     }

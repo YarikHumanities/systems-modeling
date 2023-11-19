@@ -64,12 +64,10 @@ public class Model {
     }
     public void printResult(double timeOfModeling) {
         System.out.println("\n-------------RESULTS-------------");
-        var averageQuantity = 0;
         for (Element e : list) {
             e.printResult();
             if (e instanceof Process) {
                 Process p = (Process) e;
-                averageQuantity += ((p.getQuantity() - p.getFailure()) + (p.getMeanQueue() / tcurr));
                 System.out.printf("mean length of queue = %.3f%n", p.getMeanQueue() / tcurr);
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
@@ -77,8 +75,6 @@ public class Model {
 
             }
         }
-        averageQuantity = averageQuantity / 2;
-        System.out.println();
-        System.out.println("Average Quantity: " + averageQuantity);
+
     }
 }
