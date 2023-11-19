@@ -51,4 +51,12 @@ public class FunRand {
         a = timeMean + timeDeviation * r.nextGaussian();
         return a;
     }
+
+    public static double Erlang(double timeMean, double shape) {
+        double a = 0;
+        for (int i = 0; i < shape; i++) {
+            a += Math.log(Math.random());
+        }
+        return (-1 / (timeMean / shape)) * a;
+    }
 }

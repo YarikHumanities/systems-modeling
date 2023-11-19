@@ -84,8 +84,14 @@ public class Element {
                 if ("unif".equalsIgnoreCase(getDistribution())) {
                     delay = FunRand.Unif(getDelayMean(), getDelayDev());
                 } else {
-                    if("".equalsIgnoreCase(getDistribution()))
+                    if("".equalsIgnoreCase(getDistribution())) {
                         delay = getDelayMean();
+                    } else{
+                        if("erlang".equalsIgnoreCase(getDistribution())){
+                            delay = FunRand.Erlang(getDelayMean(), getDelayDev());
+                        }
+                    }
+
                 }
             }
         }
