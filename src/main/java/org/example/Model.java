@@ -64,17 +64,30 @@ public class Model {
     }
     public void printResult(double timeOfModeling) {
         System.out.println("\n-------------RESULTS-------------");
+        double createdQuantity = 0;
+        double countProcessedTests = 0;
         for (Element e : list) {
             e.printResult();
             if (e instanceof Process) {
                 Process p = (Process) e;
+                if (p.getProcessType() == ProcessTypes.TAKING_TEST){
+                    countProcessedTests = p.getQuantity();
+                }
                 System.out.printf("mean length of queue = %.3f%n", p.getMeanQueue() / tcurr);
                 System.out.printf("Failed = " + p.getFailure() + "\n");
                 System.out.printf("failure probability = %.3f%n", p.getFailure() / (double) p.getQuantity());
                 System.out.printf("Average Load of Device: %.3f%n", p.totalWorkTime / timeOfModeling);
 
             }
+            else
+            {
+                Create c = (Create) e;
+                createdQuantity+= c.getQuantity();
+            }
         }
 
+        System.out.println();
+        System.out.println("Average Time In Clinic: " + (Process.clientsInClinicTime/createdQuantity));
+        System.out.println("Time between Tests: " + (Process.intervalBetweenLabs)/countProcessedTests);
     }
 }

@@ -39,4 +39,8 @@ public class Item {
         id=nextId;
         nextId++;
     }
+
+    public double calcTimeDiapason(){
+        return timeOut - timeIn;
+    }
 }

@@ -9,6 +9,12 @@ public class Process extends Element {
     protected final List<Channel> channels = new ArrayList<>();
     protected int workerQuant = 1;
 
+    public static double clientsInClinicTime = 0;
+
+    public static double intervalBetweenLabs = 0;
+
+    public static double prevTimeLeave = 0;
+
     public ProcessTypes getProcessType() {
         return processType;
     }
@@ -38,6 +44,12 @@ public class Process extends Element {
     public void inAct(Item item) {
         var freeChannel = this.getFreeWorker();
         super.incrementQuantity();
+
+        if(this.getProcessType()==ProcessTypes.TAKING_TEST) {
+            Process.intervalBetweenLabs += super.getTcurr() - prevTimeLeave;
+            prevTimeLeave = super.getTcurr();
+        }
+
         if(freeChannel!=null){
             System.out.println(this.getName() + " and its worker " + freeChannel.id + " inActed and took item <" + item.getId() + ">");
             freeChannel.state = 1;
@@ -108,7 +120,7 @@ public class Process extends Element {
             super.setTnext(getEarliestChannel().tnext);
         }
 
-        if (!super.getNextElementsList().isEmpty()) {
+        //if (!super.getNextElementsList().isEmpty()) {
 
             if(this.getProcessType()==ProcessTypes.DUTY) {
                 System.out.print("We are in DUTY process ");
@@ -123,7 +135,8 @@ public class Process extends Element {
                 }
             }
             if (this.getProcessType() ==ProcessTypes.ACCOMPANYING) {
-                //ЦЬОГО БАЧИТИ НЕ БУДЕМО ПОКИ ЩО БО У СУПРОВІДНИХ НЕМАЄ ДАЛІ ШЛЯХУ
+                itemOfEarliestChannel.setTimeOut(super.getTcurr());
+                Process.clientsInClinicTime+=itemOfEarliestChannel.calcTimeDiapason();
                 System.out.println("Item <" + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") arrived ar the ward");
             }
             if(this.getProcessType() ==ProcessTypes.LAB_TRANSFER){
@@ -138,6 +151,8 @@ public class Process extends Element {
             }
             if(this.getProcessType() ==ProcessTypes.TAKING_TEST) {
                 if(itemOfEarliestChannel.getType()==3){
+                    itemOfEarliestChannel.setTimeOut(super.getTcurr());
+                    Process.clientsInClinicTime+=itemOfEarliestChannel.calcTimeDiapason();
                     System.out.println("We are in TAKING_TEST process so Item <" +  + itemOfEarliestChannel.getId() + "> with type (" + itemOfEarliestChannel.getType() + ") will be sent to EXIT");
                 }
                 else{
@@ -155,7 +170,7 @@ public class Process extends Element {
                 var backedToDutyIndex = findNextProcessByType(ProcessTypes.DUTY);
                 super.getNextElementsList().get(backedToDutyIndex).inAct(itemOfEarliestChannel);
             }
-        }
+        //}
 
     }
     protected int findNextProcessByType(ProcessTypes processType){
