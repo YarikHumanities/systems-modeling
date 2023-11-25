@@ -28,12 +28,11 @@ public class Model {
             tnext = Double.MAX_VALUE;
 
             for (Element e : list) {
-                if (e.getTnext() < tnext) {
+                if (e.getTnext() < tnext && e.isAvailable()) {
                     tnext = e.getTnext();
                     event = e.getId();
                 }
             }
-
             System.out.println("\nIt's time for event in " + list.get(event).getName() + ", time = " + tnext);
 
             for (Element e : list) {
@@ -42,7 +41,12 @@ public class Model {
 
             System.out.println("tcurr " + tcurr + " will be changed to tnext " + tnext);
             tcurr = tnext;
-
+            if(tcurr==Double.MAX_VALUE){
+                printInfo();
+                System.out.println("-----END-----");
+                break;
+            }
+                //&& this.list.get(list.size()).getQuantity()==list.size()
             for (Element e : list) {
                 e.setTcurr(tcurr);
             }

@@ -5,27 +5,13 @@ import java.util.List;
 
 public class SimModel {
     public static void main(String[] args) throws Exception {
-
-        List<Integer> numberList = List.of(10, 100);
-        ArrayList<Long> times = new ArrayList<>();
-        for (Integer N : numberList) {
-            long startTime = System.nanoTime();
-            simpleModelSet(N);
-            long endTime = System.nanoTime();
-            long elapsedTime = endTime - startTime;
-            times.add(elapsedTime);
-        }
-
-        System.out.println();
-        for(int i = 0; i<numberList.size(); i++){
-            System.out.println("Time for " + numberList.get(i) + " processes: " + times.get(i));
-        }
-
-        simpleModelSet(100);
+            long workingTime = simpleModelSet(100);
+            System.out.println("100" + " Working Time: " + workingTime);
     }
-    public static void simpleModelSet(int N) throws Exception {
+    public static long simpleModelSet(int N) throws Exception {
         Create c = new Create("Create-1", 2.0, true);
         c.setDistribution("exp");
+        c.setMaxValue(N+1);
         ArrayList<Element> list = new ArrayList<>();
         list.add(c);
 
@@ -49,6 +35,9 @@ public class SimModel {
 
 
         Model model = new Model(list);
-        model.simulate(100.0);
+        long startTime = System.nanoTime();
+        model.simulate(Double.MAX_VALUE);
+        long endTime = System.nanoTime();
+        return endTime - startTime;
     }
 }
