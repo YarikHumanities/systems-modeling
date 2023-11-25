@@ -5,8 +5,20 @@ import java.util.List;
 
 public class SimModel {
     public static void main(String[] args) throws Exception {
-            long workingTime = simpleModelSet(100);
-            System.out.println("100" + " Working Time: " + workingTime);
+        ArrayList<Long> timeList = new ArrayList<>();
+        for(int i=1; i<=100; i=i*10) {
+            long workingTime = simpleModelSet(i);
+            System.out.println(i + " Working Time: " + workingTime);
+            timeList.add(workingTime);
+            Element.resetIds();
+        }
+
+        int timeIndex = 0;
+        for(int i=1; i<=100; i=i*10) {
+            System.out.println();
+            System.out.println(i + " Working Time: " + timeList.get(timeIndex));
+            timeIndex++;
+        }
     }
     public static long simpleModelSet(int N) throws Exception {
         Create c = new Create("Create-1", 2.0, true);

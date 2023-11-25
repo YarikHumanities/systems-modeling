@@ -31,6 +31,9 @@ public class Element {
     public boolean isAvailable() {
         return available;
     }
+    public static void resetIds(){
+        Element.nextId = 0;
+    }
     public void setAvailable(boolean available) {
         this.available = available;
     }
