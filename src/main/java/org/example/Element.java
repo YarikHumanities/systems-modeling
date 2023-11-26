@@ -15,6 +15,10 @@ public class Element {
     private double tcurr;
     private int state;
     private ArrayList<Element> nextElementsList = new ArrayList<>();
+
+    public void addNextElement(Element element){
+        nextElementsList.add(element);
+    }
     private static int nextId=0;
     private int id;
     public double totalWorkTime;
@@ -65,6 +69,9 @@ public class Element {
     }
 
     protected int chooseNextElement(){
+        if(nextElementsList.size()==1){
+            return 0;
+        }
         var random = new Random();
         int randomNumber = random.nextInt(100);
 
@@ -143,6 +150,7 @@ public class Element {
         state=0;
         id = nextId;
         nextId++;
+        available = true;
     }
     public void setNextElementsList(ArrayList<Element> nextElementsList) {
         this.nextElementsList = nextElementsList;

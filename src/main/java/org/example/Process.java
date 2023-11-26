@@ -96,7 +96,8 @@ public class Process extends Element {
         }
 
         if (!super.getNextElementsList().isEmpty()) {
-            this.defaultChoice();
+            //this.defaultChoice();
+            this.choiceAlgo();
         }
 
     }

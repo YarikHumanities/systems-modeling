@@ -34,7 +34,8 @@ public class Create extends Element {
         }
 
 
-        this.defaultChoice();
+        //this.defaultChoice();
+        this.choiceAlgo();
     }
 
 }
