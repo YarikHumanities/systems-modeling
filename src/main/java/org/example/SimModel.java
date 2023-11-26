@@ -20,23 +20,25 @@ public class SimModel {
     }
 
     public static void main(String[] args) throws Exception {
-//        ArrayList<Long> timeList = new ArrayList<>();
-//        for(int i=1; i<=100; i=i*10) {
-//            long workingTime = simpleModelSet(i);
-//            System.out.println(i + " Working Time: " + workingTime);
-//            timeList.add(workingTime);
-//            Element.resetIds();
-//        }
-//
-//        int timeIndex = 0;
-//        for(int i=1; i<=100; i=i*10) {
-//            System.out.println();
-//            System.out.println(i + " Working Time: " + timeList.get(timeIndex));
-//            timeIndex++;
-//        }
+        List<Integer> Ns = List.of(10, 50, 100, 125, 150);
+        ArrayList<Long> timeList = new ArrayList<>();
+        for(Integer i: Ns) {
+            //long workingTime = simpleModelSet(i);
+            long workingTime = complexModelSet(i);
+            System.out.println(i + " Working Time: " + workingTime);
+            timeList.add(workingTime);
+            Element.resetIds();
+        }
+
+        int timeIndex = 0;
+        for(Integer i: Ns) {
+            System.out.println();
+            System.out.println(i + " Working Time: " + timeList.get(timeIndex));
+            timeIndex++;
+        }
 
 
-        complexModelSet(6);
+        //complexModelSet(6);
     }
     public static Long complexModelSet(int N) throws Exception {
         Create c = new Create("Create-1", 2.0, true);
@@ -77,7 +79,7 @@ public class SimModel {
             }
         }
 
-        printStructure(c, 5);
+        //printStructure(c, 5);
         Model model = new Model(list);
         long startTime = System.nanoTime();
         System.out.println("LIST SIZE: " + list.size());
@@ -113,7 +115,7 @@ public class SimModel {
         }
 
 
-        printStructure(c, 5);
+        //printStructure(c, 5);
         Model model = new Model(list);
         long startTime = System.nanoTime();
         System.out.println("LIST SIZE: " + list.size());
