@@ -22,9 +22,10 @@ public class SimModel {
     public static void main(String[] args) throws Exception {
         List<Integer> Ns = List.of(10, 50, 100, 125, 150);
         ArrayList<Long> timeList = new ArrayList<>();
+        double lambda = 1.0;
         for(Integer i: Ns) {
-            //long workingTime = simpleModelSet(i);
-            long workingTime = complexModelSet(i);
+            long workingTime = simpleModelSet(i);
+            //long workingTime = complexModelSet(i);
             System.out.println(i + " Working Time: " + workingTime);
             timeList.add(workingTime);
             Element.resetIds();
@@ -33,7 +34,8 @@ public class SimModel {
         int timeIndex = 0;
         for(Integer i: Ns) {
             System.out.println();
-            System.out.println(i + " Working Time: " + timeList.get(timeIndex));
+            System.out.println(i + " Working Time: " + (double) timeList.get(timeIndex) / 1_000_000_000.0);
+            System.out.println("Complexity: " + (((double) timeList.get(timeIndex) / 1_000_000_000.0) * 20 * lambda) + " n");
             timeIndex++;
         }
 
