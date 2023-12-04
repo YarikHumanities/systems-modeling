@@ -3,6 +3,15 @@ package org.example;
 import java.util.ArrayList;
 
 public class Model {
+    public Double getTimeModelling() {
+        return timeModelling;
+    }
+
+    public void setTimeModelling(Double timeModelling) {
+        this.timeModelling = timeModelling;
+    }
+
+    private Double timeModelling;
     private ArrayList<Element> list = new ArrayList<>();
     double tnext, tcurr;
     int event;
@@ -45,6 +54,9 @@ public class Model {
                 printInfo();
                 System.out.println("-----END-----");
                 break;
+            }
+            else{
+                this.timeModelling = tcurr;
             }
                 //&& this.list.get(list.size()).getQuantity()==list.size()
             for (Element e : list) {

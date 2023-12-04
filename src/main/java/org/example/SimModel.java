@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimModel {
+    public static ArrayList<Double> timeModellingList = new ArrayList<>();
     public static void printStructure(Element element, int depth) {
         // Print current element
         for (int i = 0; i < depth; i++) {
@@ -21,6 +22,7 @@ public class SimModel {
 
     public static void main(String[] args) throws Exception {
         List<Integer> Ns = List.of(10, 50, 100, 125, 150);
+        //List<Integer> Ns = List.of(10, 50);
         ArrayList<Long> timeList = new ArrayList<>();
         double lambda = 1.0;
         for(Integer i: Ns) {
@@ -32,15 +34,16 @@ public class SimModel {
         }
 
         int timeIndex = 0;
+        int modelTimeIndex = 0;
         for(Integer i: Ns) {
             System.out.println();
             System.out.println(i + " Working Time: " + (double) timeList.get(timeIndex) / 1_000_000_000.0);
-            System.out.println("Complexity: " + (((double) timeList.get(timeIndex) / 1_000_000_000.0) * 20 * lambda) + " n");
+            System.out.println("Complexity: " + (timeModellingList.get(modelTimeIndex) * 20 * ((i+1)/timeModellingList.get(modelTimeIndex))) + " n");
             timeIndex++;
+            modelTimeIndex++;
         }
 
 
-        //complexModelSet(6);
     }
     public static Long complexModelSet(int N) throws Exception {
         Create c = new Create("Create-1", 2.0, true);
@@ -87,6 +90,7 @@ public class SimModel {
         System.out.println("LIST SIZE: " + list.size());
         model.simulate(Double.MAX_VALUE);
         long endTime = System.nanoTime();
+        timeModellingList.add(model.getTimeModelling());
         return endTime - startTime;
     }
 
@@ -123,6 +127,7 @@ public class SimModel {
         System.out.println("LIST SIZE: " + list.size());
         model.simulate(Double.MAX_VALUE);
         long endTime = System.nanoTime();
+        timeModellingList.add(model.getTimeModelling());
         return endTime - startTime;
     }
 }
